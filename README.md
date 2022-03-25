@@ -18,14 +18,14 @@ Follow steps below to build the registry index container image and push it to na
 If you haven't installed the DevFile Registry operator run the script below. Script expects operator-sdk installed and in path. So before running the script make sure operator-sdk binary is downloaded and is in path
 
 ```
-./deploy/installoperator.sh
+./openshift/installoperator.sh
 ```
 
 ## Create the DevfileRegistry resource
 Next we need to create the devfile registry resource. Run command below to create it
 
 ```
-oc apply -f ./deploy/registry.yaml
+oc apply -f ./openshift/registry.yaml
 ```
 
 Be sure to registry pod is up running by running command below
