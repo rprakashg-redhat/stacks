@@ -1,0 +1,96 @@
+schemaVersion: 2.2.0
+metadata:
+  name:  "quarkus-rest"
+  displayName: "Quarkus REST"
+  description: "Java stack with OpenJDK 11, Maven 3.6.3 and Quarkus tools for building RESTful APIs"
+  language: java
+  tags: [
+    "Java",
+    "Quarkus",
+    "Maven",
+    "REST",
+    "API"
+  ]
+  icon: "https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg"
+  version: "0.0.1"
+  projectType: "quarkus"
+  provider: "rprakashg"
+  supportUrl: "https://github.com/rprakashg-redhat/stacks" 
+  website: ""
+  links: {}
+
+starterProjects:
+- git:
+    checkoutFrom:
+      revision: main
+    remotes:
+      origin: https://github.com/rprakashg-redhat/quarkus-restapi-starter.git
+  name: quarkus-restapi-starter
+commands:
+- id: compile
+  exec:
+    commandLine: ./mvnw -Dmaven.repo.local=/home/user/.m2/repository compile
+    component: mvn
+    workingDir: $PROJECTS_ROOT
+- id: analyze
+  exec:
+    commandLine: ./mvnw clean verify sonar:sonar
+    component: mvn
+    workingDir: $PROJECTS_ROOT
+- id: package
+  exec:
+    commandLine: ./mvnw clean package -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true
+      -Dquarkus.native.container-runtime=podman
+    component: mvn
+    workingDir: $PROJECTS_ROOT
+- id: rununittests
+  exec:
+    commandLine: ./mvnw verify -Dquarkus.http.test-host=1.2.3.4 -Dquarkus.http.test-port=4321
+    component: mvn
+    workingDir: $PROJECTS_ROOT
+- id: run
+  exec:
+    commandLine: ./mvnw -Dmaven.repo.local=/home/user/.m2/repository quarkus:dev -Dquarkus.http.host=0.0.0.0
+      -Djava.util.logging.manager=org.jboss.logmanager.LogManager
+    component: mvn
+    group:
+      kind: run
+    hotReloadCapable: true
+    workingDir: $PROJECTS_ROOT
+- id: debug
+  exec:
+    commandLine: mvn -Dmaven.repo.local=/home/user/.m2/repository quarkus:dev -Dquarkus.http.host=0.0.0.0
+      -Djava.util.logging.manager=org.jboss.logmanager.LogManager -Ddebug=${DEBUG_PORT}
+    component: mvn
+    group:
+      kind: debug
+    hotReloadCapable: true
+    workingDir: $PROJECTS_ROOT
+- id: build
+  composite:
+    commands:
+    - compile
+    - analyze
+    - rununittests
+    - package
+components:
+- name: mvn
+  container:
+    image: registry.access.redhat.com/ubi8/openjdk-11
+    memoryLimit: 512Mi
+    mountSources: true
+    endpoints:
+      - name: http
+        targetPort: 8080
+      - name: debug
+        targetPort: 5005      
+    volumeMounts:
+      - name: m2
+        path: /home/user/.m2
+- name: m2
+  volume:
+    size: 3Gi
+events:
+  postStart:
+  - compile
+

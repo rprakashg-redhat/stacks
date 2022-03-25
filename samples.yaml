@@ -1,0 +1,13 @@
+schemaVersion: 1.0.0
+samples:
+  - name: code-with-quarkus
+    displayName: Basic Quarkus
+    description: A simple Hello World Java application using Quarkus
+    icon: https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg
+    tags: ["Java", "Quarkus"]
+    projectType: quarkus
+    language: java
+    provider: Red Hat
+    git:
+      remotes:
+        origin: https://github.com/devfile-samples/devfile-sample-code-with-quarkus.git
