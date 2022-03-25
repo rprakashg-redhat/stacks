@@ -2,6 +2,7 @@ apiVersion: registry.devfile.io/v1alpha1
 kind: DevfileRegistry
 metadata:
   name: devfileregistry
-  namespace: ${NAMESPACE}
+  namespace: registry
 spec:
-  devfileIndexImage: ${REGISTRY_INDEX_IMAGE}
+  devfileIndexImage: default-route-openshift-image-registry.apps-crc.testing/registry/devfile-index:next
+  
