@@ -15,4 +15,4 @@ spec:
     contextDir: .
   strategy:
     dockerStrategy:
-      dockerfilePath: ./deploy/dockerfile
+      dockerfilePath: ./deploy/Dockerfile
