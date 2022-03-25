@@ -1,27 +1,33 @@
 # Overview
 This is a demo that demonstrates how to run a private devfile registry with stacks and deploy it to OpenShift
 
-## Steps to build the docker image
-Follow steps to build the docker image and push it to a docker registry. In this example I'm pushing the docker image to internal docker registry in OpenShift, its not required, docker image can be pushed to any docker registry you might be using.
+## Steps to build the registry index image
+Follow steps below to build the registry index container image and push it to native container registry within OpenShift. 
 
-### Pre-requisites
-Before you can build the image we need to make sure the container registry native to Openshift is exposed from accessing from outside the cluster. This section will cover how to check the default route and create one if default route doesn't exist
+* Run commands below to create a BuildConfig resource
 
-* Checking default route for container registry native to openshift
+    ```
+    oc apply -f ./deploy/build.yaml
+    ```
+* To start the build run command below
 
-```
-oc get route default-route -n openshift-image-registry --template='{{ .spec.host }}'
-```
-
-* If the above command did not show any routes then run the command below to create the default route
-
-```
-oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
-```
-
-## Building the docker image and push it to container registry native to your OpenShift cluster
-Open terminal and run the build.sh script as shown below
+    ```
+    oc start-build registry-index-build
+    ```
+## Install the Registry operator
+If you haven't installed the DevFile Registry operator run the script below. Script expects operator-sdk installed and in path. So before running the script make sure operator-sdk binary is downloaded and is in path
 
 ```
-./build.sh
+./deploy/installoperator.sh
 ```
+
+## Create the DevfileRegistry resource
+Next we need to create the devfile registry resource. Run command below to create it
+
+```
+oc apply -f ./deploy/registry.yaml
+```
+
+Be sure to registry pod is up running by running command below
+
+oc get pods -n registry
