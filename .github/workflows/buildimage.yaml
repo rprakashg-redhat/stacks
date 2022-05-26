@@ -1,0 +1,47 @@
+name: "build-registry-index"
+
+on:
+  pull_request:
+    branches:
+      - "main"
+
+env:
+  IMAGE_REGISTRY: ${{ secrets.REGISTRY }}
+  NAMESPACE: ${{ secrets.NAMESPACE }}
+  IMAGE_NAME: "devfile-index"
+  IMAGE_TAG: latest ${{ github.sha }}
+
+jobs:
+  build-and-push-to-registry:
+    name: "build docker image and push to registrty"
+    runs-on: ubuntu-18.04 
+    environment: production
+    steps:
+    - name: check secrets
+      uses: actions/github-script@v3
+      with:
+        script: |
+          const secrets = {
+          };
+
+    - name: checkout
+      uses: actions/checkout@v2 
+
+    - name: build image from Dockerfile
+      id: image-build
+      uses: redhat-actions/buildah-build@v2
+      with: 
+        image: ${{ env.IMAGE_NAME }}
+        tags: ${{ env.IMAGE_TAG }}
+        dockerFiles: |
+          ./.ci/Dockerfile
+    - name: push to registry
+      id: push-to-registry
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{}}
+        tags: ${{}}
+        registry: ${{ env.REGISTRY }}
+
+
+  
