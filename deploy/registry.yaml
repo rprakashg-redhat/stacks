@@ -2,7 +2,7 @@ apiVersion: registry.devfile.io/v1alpha1
 kind: DevfileRegistry
 metadata:
   name: devfileregistry
-  namespace: registry
+  namespace: tools
 spec:
-  devfileIndexImage: default-route-openshift-image-registry.apps-crc.testing/registry/devfile-index:next
+  devfileIndexImage: quay.io/rgopinat/devfile-index:next
   
